@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\LoginRegisterController;
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,11 +33,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // post route
     Route::apiResource('posts', PostController::class);
-    // Route::post('/posts/{post}/like', [LikeController::class, 'likePost']);
+    Route::post('/posts/{post}/like', [LikeController::class, 'likePost']);
     // Route::delete('/posts/{post}/like', [LikeController::class, 'unlikePost']);
 
     // comment route
-    // Route::apiResource('comments', CommentController::class);
-    // Route::post('/comments/{comment}/like', [LikeController::class, 'likeComment']);
+    Route::apiResource('comments', CommentController::class);
+    Route::post('/comments/{comment}/like', [LikeController::class, 'likeComment']);
     // Route::delete('/comments/{comment}/like', [LikeController::class, 'unlikeComment']);
 });
