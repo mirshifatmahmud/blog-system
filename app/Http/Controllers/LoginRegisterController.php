@@ -12,7 +12,7 @@ class LoginRegisterController extends BaseController
 {
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(),[
+        $validator = Validator::make($request->all(), [
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'phone' => 'nullable|string|max:15',
@@ -21,8 +21,8 @@ class LoginRegisterController extends BaseController
             'confirm_password' => 'required|same:password',
         ]);
 
-        if($validator->fails()){
-            return $this->sendError('Validation error',$validator->errors(),422); // 422 validation error
+        if ($validator->fails()) {
+            return $this->sendError('Validation error', $validator->errors(), 422); // 422 validation error
         }
 
         $user = User::create([
@@ -36,24 +36,29 @@ class LoginRegisterController extends BaseController
         $success['token'] = $user->createToken('Auth_Token')->plainTextToken;
         $success['user'] = $user;
 
-        return $this->sendResponse($success,'User register successfully',201); // 201 created user
+        return $this->sendResponse($success, 'User register successfully', 201); // 201 created user
     }
 
-    public function login(Request $request){
-        $validator = Validator::make($request->all(),[
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required|string|min:6',
         ]);
 
-        if(Auth::attempt(['email'=>$request->email,'password'=>$request->password])){
+        if ($validator->fails()) {
+            return $this->sendError('Validation error', $validator->errors(), 422); // 422 validation error
+        }
+
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $user = Auth::user();
 
             $success['token'] = $user->createToken('Auth_Token')->plainTextToken;
             $success['user'] = $user;
 
-            return $this->sendResponse($success,'User login successfully',200); // 200 ok
-        }else{
-            return $this->sendError('Unauthorized user',['error'=>'Unauthorized'],401); // 401 unauthorized user
+            return $this->sendResponse($success, 'User login successfully', 200); // 200 ok
+        } else {
+            return $this->sendError('Unauthorized user', ['error' => 'Unauthorized'], 401); // 401 unauthorized user
         }
     }
 
@@ -61,7 +66,7 @@ class LoginRegisterController extends BaseController
     {
         if (auth()->user()) {
             auth()->user()->tokens()->delete();
-            return $this->sendResponse([], 'Logged out successfully',200); // 200 ok
+            return $this->sendResponse([], 'Logged out successfully', 200); // 200 ok
         }
         return $this->sendError('Unauthenticated user', [], 401); // 401 Unauthenticated user
     }
